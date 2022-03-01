@@ -1,0 +1,57 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "no-console": 2,
+        "no-debugger": 2,
+        "no-var": "error", // 不能使用var声明变量
+        "no-extra-semi": "error",
+        "@typescript-eslint/indent": ["error", 4],
+        "@typescript-eslint/no-explicit-any": "off",
+        "import/extensions": "off",
+        "linebreak-style": [0, "error", "windows"],
+        "indent": "off", // error类型，缩进2个空格
+        "space-before-function-paren": 2, // 在函数左括号的前面是否有空格
+        "eol-last": "error",
+        "semi": ["error", "never"], // 不要分号结尾
+        "quotes": ["error", "single"], // 字符串使用单双引号,double,single
+        "comma-spacing": ["error"], // 逗号后必须要空格
+        "arrow-parens": 0,
+        "no-new": 0, //允许使用 new 关键字
+        "comma-dangle": [2, "never"], // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号，always-multiline多行模式必须带逗号，单行模式不能带逗号
+        "no-undef": 0,
+        "no-unused-vars": 0,
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-unused-vars": "off", // 允许定义未使用的变量
+        "no-inner-declarations": "off", // 可以在变量中声明其他function
+        "vue/no-setup-props-destructure": "off", // 不要对 setup 中的 props 进行结构，否则会导致双向绑定失效，但是直接取是可以的
+        "vue/no-mutating-props": "off", // 因为 props 传递的是个对象，需要修改对象的值
+        "object-curly-spacing": ["error", "always"], // { obj } 对象前后要有空格
+        "space-before-blocks": "error", //块前空格
+        "keyword-spacing": "error", //关键字前后空格
+        "space-infix-ops": 1, // 小括号里面要有空格
+        "space-unary-ops": [1, { "words": true, "nonwords": false }],
+        "prefer-const": 1, // 首选const
+        "semi-spacing": [0, { "before": true, "after": true }],
+        "no-unneeded-ternary": 2, // 禁止不必要的嵌套 var isYes = answer === 1 ? true : false;
+        "arrow-spacing": "error",
+        "array-bracket-spacing": [2, "never"],
+        "key-spacing": [0, { "beforeColon": true, "afterColon": true }], //对象字面量中冒号的前后空格
+        // 开启非空断言
+        "@typescript-eslint/no-non-null-assertion": "off"
+    }
+}
