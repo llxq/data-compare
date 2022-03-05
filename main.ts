@@ -1,3 +1,5 @@
-const test = (): void => {
-    //测试
+import { diffAttr } from './src/diffAttr'
+
+export default {
+    diffAttr
 }
