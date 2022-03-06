@@ -39,11 +39,9 @@ export type CompareDataAttr = { id: number, name?: string }
 
 export type CompareData = CompareDataAttr & Obj
 
-export interface CompareTree<T extends CompareDataAttr = CompareData> {
+export interface CompareTree<T extends CompareDataAttr = CompareData> extends Obj {
     id: number
     name: string
-    icon: string
-    treeType: string
     // 需要对比的数据
     compareData: Partial<T> & CompareDataAttr
     // 源数据
@@ -60,3 +58,11 @@ export interface CompareTree<T extends CompareDataAttr = CompareData> {
 export type CreateCompareTreeProps<T> =
     Partial<Omit<CompareTree, 'compareData' | 'target'>>
     & { compareData: Partial<T> & CompareDataAttr, target?: T }
+
+export type CycleType = 'beforeCreateCompareNode'
+
+export type CycleCallback<T extends CompareDataAttr = any> = (...args: CompareTree<T>[]) => any
+
+export type Cycle<T extends CompareDataAttr = any> = {
+    [key in CycleType]?: Array<CycleCallback<T>>
+}
