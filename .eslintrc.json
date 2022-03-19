@@ -16,7 +16,6 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "no-console": 2,
         "no-debugger": 2,
         "no-var": "error", // 不能使用var声明变量
         "no-extra-semi": "error",

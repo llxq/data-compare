@@ -38,13 +38,13 @@ export type DifferenceTipsStatus = 'none' | 'compare' | 'cover' | 'merge'
 export type DialogType = 'tips' | 'compare' | 'none'
 
 // 必须要的属性
-export type CompareDataAttr = { id: number, name?: string }
+export type CompareDataAttr = { id?: number, name?: string }
 
 export type CompareData = CompareDataAttr & Obj
 
 export interface CompareTree<T extends CompareDataAttr = CompareData> extends Obj {
     id: number
-    name: string
+    name?: string
     // 需要对比的数据
     compareData: Partial<T> & CompareDataAttr
     // 源数据

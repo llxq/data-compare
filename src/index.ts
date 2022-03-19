@@ -4,6 +4,7 @@ import { diffStatusUtil } from './diffStatusUtil'
 import { parseUtil } from './parseUtil'
 import { AttrCompareStatus, CompareData, CompareDataAttr, CompareStatusEnum, CompareTree, CreateCompareTreeProps } from './types'
 import { isArray } from './utils'
+import { getConfig, getNameValue } from './utils/config'
 import { Cycle } from './utils/cycle'
 
 class DataCompare {
@@ -38,9 +39,10 @@ class DataCompare {
      */
     public createCompareNode<T extends CompareDataAttr = CompareData> (data: CreateCompareTreeProps<T>, parent?: CompareTree<T>, isClone = false): CompareTree<T> {
         const target = data.target ?? data.compareData as Required<T> ?? undefined
+        const { nameKey } = getConfig()
         const newNode: CompareTree<T> = {
             id: ++this.uid,
-            name: data.name ?? data.compareData.name ?? '未命名',
+            [nameKey]: getNameValue(data) ?? getNameValue(data.compareData) ?? '未命名',
             // 将数据类型去除掉，因为需要去除其中的 get 不可枚举属性
             compareData: Object.assign({}, data.compareData),
             target,
@@ -77,12 +79,12 @@ class DataCompare {
      * @returns 处理后的数据
      */
     public diffCompareTree(origin: CompareTree[], target: CompareTree[], parent?: CompareTree): CompareTree[]
-    public diffCompareTree(origin: CompareTree, target: CompareTree, parent?: CompareTree): CompareTree
+    public diffCompareTree(origin: CompareTree, target: CompareTree, parent?: CompareTree): CompareTree[]
     public diffCompareTree (origin: any, target: any, parent?: CompareTree): any {
         if (isArray(origin) && isArray(target)) {
             return diffCompareTreeUtil(origin, target, parent)
         } else {
-            return diffCompareTreeUtil([origin], [target], parent).shift()
+            return diffCompareTreeUtil([origin], [target], parent)
         }
     }
 
@@ -106,18 +108,18 @@ class DataCompare {
     /**
      * 解析
      */
-    public parse<T extends CompareDataAttr = CompareData>(data: T, childrenLabel?: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T>
-    public parse<T extends CompareDataAttr = CompareData>(data: T[], childrenLabel?: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T>[]
-    public parse<T extends CompareDataAttr = CompareData> (data: T[] | T, childrenLabel: keyof T | 'children' = 'children', parent?: CompareTree<T>): CompareTree<T>[] | CompareTree<T> {
-        this.cycle.addCycle('beforeParse', data, childrenLabel, parent)
+    public parse<T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T>): CompareTree<T>
+    public parse<T extends CompareDataAttr = CompareData>(data: T[], parent?: CompareTree<T>): CompareTree<T>[]
+    public parse<T extends CompareDataAttr = CompareData> (data: T[] | T, parent?: CompareTree<T>): CompareTree<T>[] | CompareTree<T> {
+        this.cycle.addCycle('beforeParse', data, parent)
         let newNode: CompareTree<T> | CompareTree<T>[]
         // XXX 为了解决重载导致的编辑器报错
         if (isArray(data)) {
-            newNode = parseUtil(data, childrenLabel, parent)
+            newNode = parseUtil(data, parent)
         } else {
-            newNode = parseUtil(data, childrenLabel, parent)
+            newNode = parseUtil(data, parent)
         }
-        this.cycle.addCycle('afterParse', data, newNode, childrenLabel, parent)
+        this.cycle.addCycle('afterParse', data, newNode, parent)
         return newNode
     }
 }

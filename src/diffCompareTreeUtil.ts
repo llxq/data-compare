@@ -3,6 +3,7 @@ import { isUndefined } from './utils'
 import { each } from './utils/object'
 import { cloneDeep } from './lodash'
 import { createCompareNode, cycle, diffAttr } from '../main'
+import { getSomeValue } from './utils/config'
 
 
 const setChangeStatus = (source: CompareTree, changeInfo: ChangeCompareInfo): void => {
@@ -23,7 +24,7 @@ const setChangeStatus = (source: CompareTree, changeInfo: ChangeCompareInfo): vo
 export const createIdxCache = (start: number, end: number, source: CompareTree[]): Map<number, number> => {
     const idMap: Map<number, number> = new Map()
     for (; start < end; ++start) {
-        const id = source[start]?.compareData.id
+        const id = getSomeValue(source[start])
         if (!isUndefined(id)) idMap.set(id, start)
     }
     return idMap
@@ -34,7 +35,7 @@ export const createIdxCache = (start: number, end: number, source: CompareTree[]
  * @param origin
  * @param target
  */
-const sameNode = (origin: CompareTree, target: CompareTree): boolean => origin.compareData.id === target.compareData.id
+const sameNode = (origin: CompareTree, target: CompareTree): boolean => getSomeValue(origin) === getSomeValue(target)
 
 /**
  * 创建被删除的节点
@@ -89,7 +90,8 @@ const parseStatus = (compareTree: CompareTree, currentStatus: AttrCompareStatus,
     if (children.length) {
         let isUpdate = false
         const childrenChangeInfo: ChildrenChangeCompareInfo = {}
-        each(children, ({ status: { type }, changeInfo, compareData: { id } }) => {
+        each(children, childrenItem => {
+            const { status: { type }, changeInfo } = childrenItem
             if (!isUpdate && type !== CompareStatusEnum.None) {
                 isUpdate = true
             }
@@ -97,7 +99,7 @@ const parseStatus = (compareTree: CompareTree, currentStatus: AttrCompareStatus,
             // 维护子节点跟换位置信息状态
             if (changeInfo) {
                 // 收集子节点对应的信息
-                Reflect.set(childrenChangeInfo, id, changeInfo)
+                Reflect.set(childrenChangeInfo, getSomeValue(childrenItem), changeInfo)
             }
         })
         // 如果状态不全等等于 None 就是 update
@@ -160,9 +162,9 @@ export const diffCompareTreeUtil = <T extends CompareDataAttr = CompareData> (or
             startOrigin = origin[++startOriginIdx]
         } else if (isUndefined(endOrigin)) {
             endOrigin = origin[--endOriginIdx]
-        } else if (isUndefined(startTarget) || filterIds.has(startTarget.compareData.id)) {
+        } else if (isUndefined(startTarget) || filterIds.has(getSomeValue(startTarget))) {
             startTarget = target[++startTargetIdx]
-        } else if (isUndefined(endTarget) || filterIds.has(endTarget.compareData.id)) {
+        } else if (isUndefined(endTarget) || filterIds.has(getSomeValue(endTarget))) {
             endTarget = target[--endTargetIdx]
         } else if (sameNode(startOrigin, startTarget)) {
             // 对比子节点
@@ -193,12 +195,12 @@ export const diffCompareTreeUtil = <T extends CompareDataAttr = CompareData> (or
             if (!cacheIdMap?.size) {
                 cacheIdMap = createIdxCache(startTargetIdx, endTargetIdx, target)
             }
-            const findIdx = cacheIdMap.get(startOrigin.compareData.id)
+            const findIdx = cacheIdMap.get(getSomeValue(startOrigin))
             if (!isUndefined(findIdx)) {
                 const newChildren = diffCompareTreeUtil(startOrigin.children, target[findIdx].children, startOrigin)
                 parseStatus(startOrigin, diffAttr(startOrigin.compareData, target[findIdx].compareData), newChildren)
                 setChangeStatus(startOrigin, { from: findIdx, to: startOriginIdx })
-                filterIds.add(target[findIdx].compareData.id)
+                filterIds.add(getSomeValue(target[findIdx]))
             } else {
                 // 设置状态表示为新增
                 updateStatus(startOrigin, CompareStatusEnum.Create)
@@ -218,7 +220,7 @@ export const diffCompareTreeUtil = <T extends CompareDataAttr = CompareData> (or
         // 表示还有删除的
         for (; startTargetIdx <= endTargetIdx; startTargetIdx++) {
             const item = target[startTargetIdx]
-            if (!filterIds.has(item.compareData.id)) {
+            if (!filterIds.has(getSomeValue(item))) {
                 origin.splice(startTargetIdx, 0, createDeleteNode(item, origin[0]?.parent))
             }
         }

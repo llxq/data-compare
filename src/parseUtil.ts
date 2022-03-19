@@ -1,31 +1,34 @@
 import { speedCreateCompareNode } from '../main'
 import { CompareDataAttr, CompareData, CompareTree } from './types'
 import { isArray } from './utils'
+import { getConfig } from './utils/config'
 import { each } from './utils/object'
 
 const getEmptyData = <T extends CompareDataAttr = CompareData> () => speedCreateCompareNode({ id: new Date().valueOf() } as T)
 
-const parseItem = <T extends CompareDataAttr = CompareData >(data: T, childrenLabel: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T> => {
+const parseItem = <T extends CompareDataAttr = CompareData >(data: T, parent?: CompareTree<T>): CompareTree<T> => {
     if (!data) return getEmptyData<T>()
+    const { childrenKey } = getConfig()
     const keys = Object.keys(data)
     const newData: Partial<T> = {}
     each(keys, key => {
-        if (!Reflect.has(newData, key) && key !== childrenLabel) {
+        if (!Reflect.has(newData, key) && key !== childrenKey) {
             Reflect.set(newData, key, Reflect.get(data, key))
         }
     })
     return speedCreateCompareNode<T>(newData as T, parent)
 }
 
-const parseChildren = <T extends CompareDataAttr = CompareData>(data: T, childrenLabel: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T> => {
-    const currentNode = parseItem(data, childrenLabel, parent)
-    if (Reflect.has(data, childrenLabel)) {
-        const childrenTarget = Reflect.get(data, childrenLabel)
+const parseChildren = <T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T>): CompareTree<T> => {
+    const { childrenKey } = getConfig()
+    const currentNode = parseItem(data, parent)
+    if (Reflect.has(data, childrenKey)) {
+        const childrenTarget = Reflect.get(data, childrenKey)
         if (childrenTarget) {
             if (isArray(childrenTarget)) {
-                currentNode.children.concat(childrenTarget.map(m => parseChildren(m, childrenLabel, currentNode)).filter(it => !!it) as CompareTree<T>[])
+                currentNode.children.concat(childrenTarget.map(m => parseChildren(m, currentNode)).filter(it => !!it) as CompareTree<T>[])
             } else {
-                parseChildren(childrenTarget, childrenLabel, currentNode)
+                parseChildren(childrenTarget, currentNode)
             }
         }
     }
@@ -33,17 +36,17 @@ const parseChildren = <T extends CompareDataAttr = CompareData>(data: T, childre
     return currentNode
 }
 
-export function parseUtil<T extends CompareDataAttr = CompareData> (data: T, childrenLabel: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T>
-export function parseUtil<T extends CompareDataAttr = CompareData> (data: T[], childrenLabel: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T>[]
-export function parseUtil<T extends CompareDataAttr = CompareData> (data: T[] | T, childrenLabel: keyof T | 'children', parent?: CompareTree<T>): CompareTree<T>[] | CompareTree<T> {
+export function parseUtil<T extends CompareDataAttr = CompareData> (data: T, parent?: CompareTree<T>): CompareTree<T>
+export function parseUtil<T extends CompareDataAttr = CompareData> (data: T[], parent?: CompareTree<T>): CompareTree<T>[]
+export function parseUtil<T extends CompareDataAttr = CompareData> (data: T[] | T, parent?: CompareTree<T>): CompareTree<T>[] | CompareTree<T> {
     if (isArray(data)) {
-        const childrenNodes = data.map(m => parseChildren(m, childrenLabel, parent))
+        const childrenNodes = data.map(m => parseChildren(m, parent))
         if (childrenNodes) {
             return childrenNodes
         }
         return [getEmptyData<T>()]
     } else {
-        const parseData = parseChildren(data, childrenLabel, parent)
+        const parseData = parseChildren(data, parent)
         if (!parseData) {
             return getEmptyData<T>()
         }

@@ -139,18 +139,18 @@ export class Cycle {
      * beforeParse
      * @param callback 
      */
-    public beforeParse<T extends CompareDataAttr = CompareData> (callback: (data: T | T[], childrenLabel: keyof T | 'children') => void): void {
+    public beforeParse<T extends CompareDataAttr = CompareData> (callback: (data: T | T[], parent?: CompareTree<T>) => void): void {
         const [args] = this.runCycle('beforeParse', callback)
-        this.runCallback(callback, args, 3)
+        this.runCallback(callback, args, 2)
     }
 
     /**
      * afterParse
      * @param callback 
      */
-    public afterParse<T extends CompareDataAttr = CompareData> (callback: (data: T | T[], compareTree: CompareTree<T> | CompareTree<T>[], childrenLabel: keyof T | 'children') => void): void {
+    public afterParse<T extends CompareDataAttr = CompareData> (callback: (data: T | T[], compareTree: CompareTree<T> | CompareTree<T>[], parent?: CompareTree<T>) => void): void {
         const [args] = this.runCycle('afterParse', callback)
-        this.runCallback(callback, args, 4)
+        this.runCallback(callback, args, 3)
     }
 }
 

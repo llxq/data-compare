@@ -3,6 +3,7 @@ import { createIdxCache } from './diffCompareTreeUtil'
 import { cloneDeep, isEqual } from './lodash'
 import { CompareTree, CompareStatusEnum, AttrCompareStatus } from './types'
 import { isUndefined } from './utils'
+import { getConfig, getSomeValue } from './utils/config'
 import cycle, { Cycle } from './utils/cycle'
 import { isEmptyObj, each } from './utils/object'
 
@@ -137,13 +138,14 @@ const parseStatus = (current: CompareTree, online: CompareTree): boolean => {
  */
 const cloneCompareTree = (cloneTree: CompareTree, statusType: CompareStatusEnum, parent?: CompareTree, isOnline?: boolean): CompareTree => {
 
+    const { someKey } = getConfig()
     cycle.addCycle('beforeCloneCompareTree', cloneTree, statusType, parent)
 
     const newTreeNode: CompareTree = createCompareNode({
         treeType: cloneTree.treeType,
         name: statusType === CompareStatusEnum.VirtualCreate ? '~' : cloneTree.compareData.name,
         compareData: {
-            id: cloneTree.compareData.id,
+            [someKey]: getSomeValue(cloneTree),
             name: statusType === CompareStatusEnum.VirtualCreate ? '~' : cloneTree.compareData.name
         },
         status: {
@@ -170,7 +172,10 @@ const cloneCompareTree = (cloneTree: CompareTree, statusType: CompareStatusEnum,
  * @param current
  * @param online
  */
-const sameNode = (current: CompareTree, online: CompareTree): boolean => current.compareData.id === online.compareData.id
+const sameNode = (current: CompareTree, online: CompareTree): boolean => {
+    const { someKey } = getConfig()
+    return Reflect.get(current.compareData, someKey) === Reflect.get(online.compareData, someKey)
+}
 
 /**
  * diff 对比当前两个状态树。处理冲突项，并且修正两个树结构使其结构一致
@@ -245,9 +250,9 @@ export const diffStatusUtil = (current: CompareTree[], online: CompareTree[], cu
             startCurrent = current[++startCurrentIdx]
         } else if (isUndefined(current[endCurrentIdx])) {
             endCurrent = current[--endCurrentIdx]
-        } else if (filterIds.has(startOnline.compareData.id) || isUndefined(online[startOnlineIdx])) {
+        } else if (filterIds.has(getSomeValue(startOnline)) || isUndefined(online[startOnlineIdx])) {
             startOnline = online[++startOnlineIdx]
-        } else if (filterIds.has(endOnline.compareData.id) || isUndefined(online[endOnlineIdx])) {
+        } else if (filterIds.has(getSomeValue(endOnline)) || isUndefined(online[endOnlineIdx])) {
             endOnline = online[--endOnlineIdx]
         } else if (sameNode(startCurrent, startOnline)) {
             if (!compareStatus(startCurrentIdx, startOnlineIdx)) {
@@ -277,20 +282,20 @@ export const diffStatusUtil = (current: CompareTree[], online: CompareTree[], cu
             if (!cacheIdMap?.size) {
                 cacheIdMap = createIdxCache(startOnlineIdx, endOnlineIdx, online)
             }
-            const findIdx = cacheIdMap?.get(startCurrent.compareData.id)
+            const findIdx = cacheIdMap?.get(getSomeValue(startCurrent))
             if (!isUndefined(findIdx)) {
                 // 说明是跟换了位置信息
                 if (!compareStatus(startCurrentIdx, findIdx)) {
                     diffStatusUtil(startCurrent.children, online[findIdx].children, startCurrent, online[findIdx])
                     startCurrent = current[++startCurrentIdx]
-                    filterIds.add(online[findIdx].compareData.id)
+                    filterIds.add(getSomeValue(online[findIdx]))
                 }
             } else {
                 // 说明是新增的节点。需要给 online 增加一个节点到当前 startCurrent 后面，并且移动指针。
                 const beforeIdx = getBeforeIndex(startCurrentIdx)
                 online.splice(beforeIdx, 0, cloneCompareTree(startCurrent, CompareStatusEnum.VirtualCreate, onlineParent))
                 // 增加过滤
-                filterIds.add(startCurrent.compareData.id)
+                filterIds.add(getSomeValue(startCurrent))
                 startCurrent = current[++startCurrentIdx]
 
                 // 插入到开始节点前面，需要让开始节点/结束节点后移
@@ -309,7 +314,7 @@ export const diffStatusUtil = (current: CompareTree[], online: CompareTree[], cu
     if (startOnlineIdx <= endOnlineIdx) {
         for (; startOnlineIdx <= endOnlineIdx; ++startOnlineIdx) {
             const item = online[startOnlineIdx]
-            if (!filterIds.has(item.compareData.id)) {
+            if (!filterIds.has(getSomeValue(item))) {
                 current.splice(startOnlineIdx, 0, cloneCompareTree(item, CompareStatusEnum.VirtualCreate, currentParent, true))
             }
         }
