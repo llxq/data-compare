@@ -56,11 +56,12 @@ const sameValue = <T extends Record<string, unknown>>(originKey: string, targetK
     if (originValue !== targetValue) {
         const status: AttrCompareStatus = {
             type: CompareStatusEnum.None,
-            path: pathStacks.join('.')
+            path: pathStacks.join('.'),
+            oldValue: targetValue
         }
         if (typeof originValue === 'object' && typeof targetValue === 'object') {
             // 递归去比较子节点属性的状态
-            const { attrStatus, type } = diffAttr(originValue, targetValue, pathStacks.slice())
+            const { attrStatus, type } = diffAttrUtil(originValue, targetValue, pathStacks.slice())
             if (attrStatus) {
                 if (!Reflect.has(status, 'attrStatus')) {
                     Reflect.set(status, 'attrStatus', {})
@@ -252,7 +253,7 @@ const diffArrayAttr = (origin: Array<any>, target: Array<any>, pathStacks: strin
     const endTargetIdx = target.length - 1
 
     while (startOriginIdx <= endOriginIdx && startTargetIdx <= endTargetIdx) {
-        const currentStatus = diffAttr(startOrigin, startTarget, pathStacks.slice())
+        const currentStatus = diffAttrUtil(startOrigin, startTarget, pathStacks.slice().concat([`${ startOriginIdx }`]))
         // 如果两个相同的话
         if (currentStatus.type === CompareStatusEnum.Update || currentStatus.attrStatus) {
             updateStatus(startTargetIdx, currentStatus, status)
@@ -287,7 +288,7 @@ const diffArrayAttr = (origin: Array<any>, target: Array<any>, pathStacks: strin
  * @param target old
  * @param pathStacks
  */
-export const diffAttr = (origin: unknown, target: unknown, pathStacks: string[] = []): AttrCompareStatus => {
+export const diffAttrUtil = (origin: unknown, target: unknown, pathStacks: string[] = []): AttrCompareStatus => {
     if (typeof origin === 'object' && typeof target === 'object') {
         if (isArray(origin) && isArray(target)) {
             return diffArrayAttr(origin, target, pathStacks)

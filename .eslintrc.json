@@ -52,6 +52,8 @@
         "array-bracket-spacing": [2, "never"],
         "key-spacing": [0, { "beforeColon": true, "afterColon": true }], //对象字面量中冒号的前后空格
         // 开启非空断言
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "no-dupe-class-members": "off",
+        "no-redeclare": "off"
     }
 }

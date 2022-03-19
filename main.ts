@@ -1,9 +1,15 @@
-import { diffAttr } from './src/diffAttr'
-import { createCompareNode } from './src/createCompareNode'
-import cycle from './src/utils/cycle'
+import dataCompare from './src'
 
-export default {
-    diffAttr,
-    createCompareNode,
-    ...cycle
-}
+// methods
+export const createCompareNode = dataCompare.createCompareNode.bind(dataCompare)
+export const speedCreateCompareNode = dataCompare.speedCreateCompareNode.bind(dataCompare)
+export const diffCompareTree = dataCompare.diffCompareTree.bind(dataCompare)
+export const diffStatus = dataCompare.diffStatus.bind(dataCompare)
+export const diffAttr = dataCompare.diffAttr.bind(dataCompare)
+export const parse = dataCompare.parse.bind(dataCompare)
+
+// cycle
+export const cycle = dataCompare.cycle
+
+// all
+export default dataCompare

@@ -22,3 +22,9 @@ export const each = <T extends Obj>(source: T, fn: Callback<T>): void => {
         }
     }
 }
+
+/**
+ * 判断对象是否为空
+ * @param value
+ */
+export const isEmptyObj = <T extends Record<string | number, unknown>> (value?: T): boolean => !value || !Object.keys(value).length
