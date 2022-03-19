@@ -12,6 +12,7 @@ export const parse = dataCompare.parse.bind(dataCompare)
 // cycle
 export const cycle = dataCompare.cycle
 
+// config
 export const updateConfig = baseUpdateConfig
 
 // all
