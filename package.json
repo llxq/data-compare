@@ -1,7 +1,7 @@
 {
   "name": "data-compare",
   "version": "1.0.0",
-  "description": "data-compare是一个对比数据之间差异的一个轻量级库，类似于简化版本的git对比。",
+  "description": "data-compare是一个对比数据之间差异的一个轻量级库，类似于简化版本的git对比。也可以单纯用来对比两个数据之间的差异。",
   "main": "main.ts",
   "module": "main.ts",
   "publishConfig": {
