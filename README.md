@@ -1,4 +1,4 @@
-# @chendf/data-compare
+# data-compare
 data-compare是一个对比数据之间差异的一个轻量级库，类似于简化版本的git对比。
 
 ## 功能
@@ -59,7 +59,7 @@ __createCompareNode: 创建一个对比节点__
 - _@param_ isClone 是否为clone节点，clone节点不会触发 beforeCreateCompareNode 钩子
 - _@returns_ 返回创建成功后的节点
 ```ts
-import { createCompareNode } from '@chendf/data-compare'
+import { createCompareNode } from 'data-compare'
 const data = {
     id: 1,
     name: '名称'
@@ -74,7 +74,7 @@ __speedCreateCompareNode: 快速创建一个对比节点__
 - _@param_ parent 父节点
 - _@returns_ 返回创建成功后的节点
 ```ts
-import { speedCreateCompareNode } from '@chendf/data-compare'
+import { speedCreateCompareNode } from 'data-compare'
 const data = {
     id: 1,
     name: '名称'
@@ -91,7 +91,7 @@ __diffCompareTree: 对比两个对比树节点之间的差异 (两个重载)__
 - _@param parent 父节点数据_
 - _@returns 对比后的数据_
 ```ts
-import { speedCreateCompareNode, diffCompareTree } from '@chendf/data-compare'
+import { speedCreateCompareNode, diffCompareTree } from 'data-compare'
 const data = {
     id: 1,
     name: '名称'
@@ -141,7 +141,7 @@ __diffStatus: 对比两个差异树节点状态，并且设置冲突状态。如
 - _@param currentParent 当前版本父节点_
 - _@param onlineParent 线上版本父节点_
 ```ts
-import { speedCreateCompareNode, diffCompareTree, diffStatus } from '@chendf/data-compare'
+import { speedCreateCompareNode, diffCompareTree, diffStatus } from 'data-compare'
 const current = {
     id: 1,
     name: '名称1',
@@ -247,7 +247,7 @@ _speedDiffStatus: 快速对比三个数据之间的差异_
 - _@param online 线上版本_
 - _@param base 基础版本_
 ```ts
-import { speedDiffStatus } from '@chendf/data-compare'
+import { speedDiffStatus } from 'data-compare'
 const current = {
     id: 1,
     name: '名称1',
@@ -276,7 +276,7 @@ __diffAttr: 对比两个对象之间的差异，能展示出每个对象节点�
 - _@param_ target 其他版本数据。
 - _@param_ pathStacks 可选参数，为当前对比的节点的key路径。
 ```ts
-import { diffAttr } from '@chendf/data-compare'
+import { diffAttr } from 'data-compare'
 const diffResult = diffAttr({ a: 2, b: 2, d: 1 }, { a: 1, b: 2, c: 3 })
 
 // 返回结果
@@ -314,7 +314,7 @@ __parse: 将数据自动解析为对比节点 (如果想要自动解析按照自
 - _parse<T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T>): CompareTree<T>_
 - _parse<T extends CompareDataAttr = CompareData>(data: T[], parent?: CompareTree<T>): CompareTree<T>[]_
 ```ts
-import { parse } from '@chendf/data-compare'
+import { parse } from 'data-compare'
 const data = {
     id: 1,
     name: '名称2',
@@ -325,15 +325,15 @@ const compareTree = parse(data) // 结果与直接调用 speedCreateCompareNode 
 ```
 
 
-## 钩子函数
+## 钩子函数 所有的钩子都存储在 cycle 对象上
 钩子函数是指在对比期间调用的一些方法，可以让你定制化对比。
 
 __beforeCreateCompareNode: 创建对比节点之前调用__。
 - _callback：_
     - _@param compareTree 根据当前源创建的节点数据_
 ```ts
-import { beforeCreateCompareNode } from '@chendf/data-compare'
-beforeCreateCompareNode(compareTree => {
+import { cycle } from 'data-compare'
+cycle.beforeCreateCompareNode(compareTree => {
     // 如果想要对数据进行修改，只需要处理data即可
     compareTree.name = 'update' // example
 })
@@ -391,4 +391,4 @@ __afterParse: 解析节点之后调用__
 - _callback(data: T | T[], newNode: CompareTree<T>, parent?: CompareTree<T>)_
     - _@param data 原始数据_
     - _@param newNode 生成的节点数据_
-    - _@param parent 父节点数据_
+    - _@param parent 父
