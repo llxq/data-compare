@@ -125,7 +125,7 @@ const parseStatus = (current: CompareTree, online: CompareTree): boolean => {
     if (isNoneUpdate(online)) {
         online.status.type = CompareStatusEnum.None
     }
-    cycle.addCycle('afterDiffAttrStatus', current, online)
+    cycle.addCycle('afterCompareStatus', current, online)
     return hasDifference
 }
 
@@ -162,7 +162,7 @@ const cloneCompareTree = (cloneTree: CompareTree, statusType: CompareStatusEnum,
     // 修改映射id
     cloneTree.mappingId = newTreeNode.id
 
-    cycle.addCycle('afterDiffAttrStatus', isOnline ? newTreeNode : cloneTree, isOnline ? cloneTree : newTreeNode)
+    cycle.addCycle('afterCompareStatus', isOnline ? newTreeNode : cloneTree, isOnline ? cloneTree : newTreeNode)
 
     return newTreeNode
 }

@@ -43,19 +43,25 @@ export type CompareDataAttr = { id?: number, name?: string }
 export type CompareData = CompareDataAttr & Obj
 
 export interface CompareTree<T extends CompareDataAttr = CompareData> extends Obj {
+    // 树节点id
     id: number
+    // 树节点名称 也可以通过配置更改 config
     name?: string
     // 需要对比的数据
     compareData: Partial<T> & CompareDataAttr
     // 源数据
     target?: T
+    // 状态
     status: AttrCompareStatus
     // 当前节点的位置更换信息
     changeInfo?: ChangeCompareInfo
     // 子节点的位置跟换信息
     childrenChangeInfo?: ChildrenChangeCompareInfo
+    // 子节点
     children: CompareTree<T>[]
+    // 父节点
     parent?: CompareTree<T>
+    // 当前节点id与另一个对比数id的映射
     mappingId?: number
 }
 
@@ -63,7 +69,7 @@ export type CreateCompareTreeProps<T> =
     Partial<Omit<CompareTree, 'compareData' | 'target'>>
     & { compareData: Partial<T> & CompareDataAttr, target?: T }
 
-export type CycleType = 'beforeCreateCompareNode' | 'beforeCompare' | 'afterCompare' | 'beforeDiffStatus' | 'afterDiffStatus' | 'afterDiffAttrStatus' | 'beforeCloneCompareTree' | 'beforeCloneCompareTree' | 'beforeParse' | 'afterParse'
+export type CycleType = 'beforeCreateCompareNode' | 'beforeCompare' | 'afterCompare' | 'beforeDiffStatus' | 'afterDiffStatus' | 'afterCompareStatus' | 'beforeCloneCompareTree' | 'beforeParse' | 'afterParse'
 
 export type CycleCallback = (...args: any) => any
 
@@ -88,7 +94,7 @@ export interface CompareDataType {
 }
 
 export type ArgsCallback <T extends CompareDataAttr = CompareData> = (data: CompareTree<T>) => void
-export type Args2Callback <T extends CompareDataAttr = CompareData> = (data: CompareTree<T>) => void
+export type Args2Callback <T extends CompareDataAttr = CompareData> = (current: CompareTree<T>, online: CompareTree<T>) => void
 export type Args3Callback <T extends CompareDataAttr = CompareData> = (origin: CompareTree<T>[], target: CompareTree<T>[], parent?: CompareTree<T>) => void
 export type Args4Callback <T extends CompareDataAttr = CompareData> = (current: CompareTree<T>[], online: CompareTree<T>[], currentParent?: CompareTree<T>, onlineParent?: CompareTree<T>) => void
 
@@ -96,3 +102,5 @@ export interface DiffCompareTreeArgs <T extends CompareDataAttr = CompareData> {
     (origin: CompareTree<T>[], target: CompareTree<T>[], parent?: CompareTree<T>): CompareTree<T>[]
     (origin: CompareTree<T>, target:CompareTree<T>, parent?: CompareTree<T>): CompareTree<T>
 }
+
+export interface SpeedDiffStatusType { current: CompareTree[], online: CompareTree[] }

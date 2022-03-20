@@ -2,7 +2,7 @@ import { diffAttrUtil } from './diffAttrUtil'
 import { diffCompareTreeUtil } from './diffCompareTreeUtil'
 import { diffStatusUtil } from './diffStatusUtil'
 import { parseUtil } from './parseUtil'
-import { AttrCompareStatus, CompareData, CompareDataAttr, CompareStatusEnum, CompareTree, CreateCompareTreeProps } from './types'
+import { AttrCompareStatus, CompareData, CompareDataAttr, CompareStatusEnum, CompareTree, CreateCompareTreeProps, SpeedDiffStatusType } from './types'
 import { isArray } from './utils'
 import { getConfig, getNameValue } from './utils/config'
 import { Cycle } from './utils/cycle'
@@ -26,6 +26,12 @@ class DataCompare {
 
     public cycle!: Cycle
 
+    /**
+     * 快速创建一个对比节点
+     * @param data 原始数据
+     * @param parent 父节点
+     * @returns 
+     */
     public speedCreateCompareNode<T extends CompareDataAttr = CompareData> (data: T, parent?: CompareTree<T>): CompareTree<T> {
         return this.createCompareNode({ compareData: data, target: data }, parent)
     }
@@ -76,11 +82,11 @@ class DataCompare {
      * @param origin 原始数据，该方法是会修改原始数据的
      * @param target 对比的数据
      * @param parent 父节点数据
-     * @returns 处理后的数据
+     * @returns 对比后的数据_
      */
     public diffCompareTree(origin: CompareTree[], target: CompareTree[], parent?: CompareTree): CompareTree[]
     public diffCompareTree(origin: CompareTree, target: CompareTree, parent?: CompareTree): CompareTree[]
-    public diffCompareTree (origin: any, target: any, parent?: CompareTree): any {
+    public diffCompareTree (origin: any, target: any, parent?: CompareTree): CompareTree[] {
         if (isArray(origin) && isArray(target)) {
             return diffCompareTreeUtil(origin, target, parent)
         } else {
@@ -102,6 +108,25 @@ class DataCompare {
             diffStatusUtil(current, online, currentParent, onlineParent)
         } else {
             diffStatusUtil([current], [online], currentParent, onlineParent)
+        }
+    }
+
+    /**
+     * 快速对比三个对象之前的数据差异
+     * @param current 当前版本
+     * @param online 线上版本
+     * @param base 基础版本
+     */
+    public speedDiffStatus <T extends CompareDataAttr = CompareData> (current: T, online: T, base: T): SpeedDiffStatusType {
+        const currentTree = this.speedCreateCompareNode(current)
+        const onlineTree = this.speedCreateCompareNode(online)
+        const baseTree = this.speedCreateCompareNode(base)
+        const cb = this.diffCompareTree(currentTree, baseTree)
+        const ob = this.diffCompareTree(onlineTree, baseTree)
+        diffStatusUtil(cb, ob)
+        return {
+            current: cb,
+            online: ob
         }
     }
 

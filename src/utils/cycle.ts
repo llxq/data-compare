@@ -118,11 +118,11 @@ export class Cycle {
     }
 
     /**
-     * afterDiffAttrStatus
+     * afterCompareStatus
      * @param callback 
      */
-    public afterDiffAttrStatus<T extends CompareDataAttr = CompareData> (callback: Args2Callback<T>): void {
-        const [args] = this.runCycle('afterDiffAttrStatus', callback)
+    public afterCompareStatus<T extends CompareDataAttr = CompareData> (callback: Args2Callback<T>): void {
+        const [args] = this.runCycle('afterCompareStatus', callback)
         this.runCallback(callback, args, 2)
     }
 
