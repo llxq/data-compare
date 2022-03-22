@@ -1,4 +1,3 @@
-import { AttrCompareStatus, CompareStatusEnum } from './types'
 import { isArray, isUndefined } from './utils'
 import { each } from './utils/object'
 
@@ -50,7 +49,7 @@ const createIdxCache = (start: number, end: number, source: string[]): Map<strin
  * @param target
  * @param pathStacks
  */
-const sameValue = <T extends Record<string, unknown>>(originKey: string, targetKey: string, origin: T, target: T, pathStacks: string[] = []): UndefinedAble<AttrCompareStatus> => {
+const sameValue = <T extends Record<string, unknown>> (originKey: string, targetKey: string, origin: T, target: T, pathStacks: string[] = []): UndefinedAble<AttrCompareStatus> => {
     const originValue = Reflect.get(origin, originKey)
     const targetValue = Reflect.get(target, targetKey)
     if (originValue !== targetValue) {

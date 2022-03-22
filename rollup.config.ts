@@ -1,10 +1,11 @@
+import { defineConfig } from 'rollup'
 import packageJson from './package.json'
 import { join, resolve } from 'path'
 import ts from 'rollup-plugin-typescript2'
 import commonjs from '@rollup/plugin-commonjs'
 import resolvePlugin from '@rollup/plugin-node-resolve'
 
-export default {
+export default defineConfig({
     input: 'main.ts',
     output: [
         {
@@ -27,4 +28,4 @@ export default {
             extensions: ['.ts', '.json']
         })
     ]
-}
+})

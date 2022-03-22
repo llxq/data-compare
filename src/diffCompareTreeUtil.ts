@@ -1,4 +1,3 @@
-import { CompareTree, ChangeCompareInfo, CompareStatusEnum, AttrCompareStatus, ChildrenChangeCompareInfo, CompareData, CompareDataAttr } from './types'
 import { isUndefined } from './utils'
 import { each } from './utils/object'
 import { cloneDeep } from './lodash'
@@ -42,7 +41,7 @@ const sameNode = (origin: CompareTree, target: CompareTree): boolean => getSomeV
  * @param compareTree
  * @param parent
  */
-const createDeleteNode = <T extends CompareDataAttr = CompareData>(compareTree: CompareTree<T>, parent?: CompareTree<T>): CompareTree<T> => {
+const createDeleteNode = <T extends CompareDataAttr = CompareData> (compareTree: CompareTree<T>, parent?: CompareTree<T>): CompareTree<T> => {
 
     const diffDeleteChildren = (compareTree: CompareTree, resultChildren: CompareTree[] = []): CompareTree[] => {
         compareTree.children && each(compareTree.children, children => resultChildren.push(createDeleteNode(children, compareTree)))

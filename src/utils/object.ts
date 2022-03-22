@@ -7,7 +7,7 @@ type Callback<T extends Obj> = (item: T extends (infer U)[] ? U : T[Extract<keyo
  * @param source 需要遍历的元素
  * @param fn 遍历的同步回调 返回 true 可以停止遍历
  */
-export const each = <T extends Obj>(source: T, fn: Callback<T>): void => {
+export const each = <T extends Obj> (source: T, fn: Callback<T>): void => {
     if (isArray(source)) {
         for (let i = 0, length = source.length; i < length; i++) {
             if (fn(source[i], i, source) === true) return

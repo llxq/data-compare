@@ -1,14 +1,3 @@
-import { CompareTree } from '../types'
-
-export interface DataCompareConfig {
-    // 解析为子节点的key
-    childrenKey?: string
-    // 对比的key
-    someKey?: string
-    // 展示的name
-    nameKey?: string
-}
-
 const defaultConfig: Required<DataCompareConfig> = {
     childrenKey: 'children',
     someKey: 'id',

@@ -1,4 +1,3 @@
-import { Args2Callback, Args3Callback, Args4Callback, ArgsCallback, CompareData, CompareDataAttr, CompareStatusEnum, CompareTree, CycleArgs, CycleCallback, CycleCallbackStack, CycleType, CycleTypeStack } from '../types'
 import { each } from './object'
 
 export class Cycle {
@@ -20,7 +19,7 @@ export class Cycle {
         return stacks
     }
 
-    private runCallback (callback: CycleCallback, args: any[], argsNum: number): void {
+    private runCallback = (callback: CycleCallback, args: any[], argsNum: number): void => {
         if (!args) return
         switch (argsNum) {
             case 1:
@@ -81,13 +80,12 @@ export class Cycle {
 
     /**
      * 比较之前调用
-     * @param callback 
+     * @param callback
      */
     public beforeCompare<T extends CompareDataAttr = CompareData> (callback: Args3Callback<T>): void {
         const [args] = this.runCycle('beforeCompare', callback)
         this.runCallback(callback, args, 3)
     }
-
 
     /**
      * 比较之后调用
@@ -101,7 +99,7 @@ export class Cycle {
 
     /**
      * beforeDiffStatus
-     * @param callback 
+     * @param callback
      */
     public beforeDiffStatus<T extends CompareDataAttr = CompareData> (callback: Args4Callback<T>): void {
         const [args] = this.runCycle('beforeDiffStatus', callback)
@@ -109,8 +107,8 @@ export class Cycle {
     }
 
     /**
-     * 
-     * @param callback 
+     *
+     * @param callback
      */
     public afterDiffStatus<T extends CompareDataAttr = CompareData> (callback: Args4Callback<T>): void {
         const [args] = this.runCycle('afterDiffStatus', callback)
@@ -119,7 +117,7 @@ export class Cycle {
 
     /**
      * afterCompareStatus
-     * @param callback 
+     * @param callback
      */
     public afterCompareStatus<T extends CompareDataAttr = CompareData> (callback: Args2Callback<T>): void {
         const [args] = this.runCycle('afterCompareStatus', callback)
@@ -128,7 +126,7 @@ export class Cycle {
 
     /**
      * beforeCloneCompareTree
-     * @param callback 
+     * @param callback
      */
     public beforeCloneCompareTree<T extends CompareDataAttr = CompareData> (callback: (cloneTree: CompareTree<T>, statusType: CompareStatusEnum, parent?: CompareTree) => void): void {
         const [args] = this.runCycle('beforeCloneCompareTree', callback)
@@ -137,7 +135,7 @@ export class Cycle {
 
     /**
      * beforeParse
-     * @param callback 
+     * @param callback
      */
     public beforeParse<T extends CompareDataAttr = CompareData> (callback: (data: T | T[], parent?: CompareTree<T>) => void): void {
         const [args] = this.runCycle('beforeParse', callback)
@@ -146,7 +144,7 @@ export class Cycle {
 
     /**
      * afterParse
-     * @param callback 
+     * @param callback
      */
     public afterParse<T extends CompareDataAttr = CompareData> (callback: (data: T | T[], compareTree: CompareTree<T> | CompareTree<T>[], parent?: CompareTree<T>) => void): void {
         const [args] = this.runCycle('afterParse', callback)

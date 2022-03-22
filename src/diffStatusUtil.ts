@@ -1,11 +1,10 @@
 import { createCompareNode } from '../main'
 import { createIdxCache } from './diffCompareTreeUtil'
 import { cloneDeep, isEqual } from './lodash'
-import { CompareTree, CompareStatusEnum, AttrCompareStatus } from './types'
 import { isUndefined } from './utils'
 import { getConfig, getSomeValue } from './utils/config'
-import cycle, { Cycle } from './utils/cycle'
-import { isEmptyObj, each } from './utils/object'
+import cycle from './utils/Cycle'
+import { each, isEmptyObj } from './utils/object'
 
 /**
  * 设置冲突
@@ -19,24 +18,6 @@ const setConflict = (origin: AttrCompareStatus, target: AttrCompareStatus): void
         // 修改状态
         origin.type = CompareStatusEnum.Conflict
         target.type = CompareStatusEnum.Conflict
-    }
-}
-
-const updateParentConflictByAttr = (origin: CompareTree, online: CompareTree): void => {
-    if (origin.checkUnEnable && online.checkUnEnable) {
-        const { status: { type: currentType } } = origin
-        const { status: { type: onlineType } } = online
-        // if conflict => update parent
-        if (currentType === CompareStatusEnum.Conflict && onlineType === currentType) {
-            if (online.parent && origin.parent) {
-                if (!online.parent.checkUnEnable && !origin.parent.checkUnEnable) {
-                    online.parent.status.type = CompareStatusEnum.Conflict
-                    origin.parent.status.type = CompareStatusEnum.Conflict
-                } else {
-                    updateParentConflictByAttr(origin.parent, online.parent)
-                }
-            }
-        }
     }
 }
 

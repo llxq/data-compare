@@ -2,10 +2,9 @@ import { diffAttrUtil } from './diffAttrUtil'
 import { diffCompareTreeUtil } from './diffCompareTreeUtil'
 import { diffStatusUtil } from './diffStatusUtil'
 import { parseUtil } from './parseUtil'
-import { AttrCompareStatus, CompareData, CompareDataAttr, CompareStatusEnum, CompareTree, CreateCompareTreeProps, SpeedDiffStatusType } from './types'
 import { isArray } from './utils'
 import { getConfig, getNameValue } from './utils/config'
-import { Cycle } from './utils/cycle'
+import { Cycle } from './utils/Cycle'
 
 class DataCompare {
 
@@ -30,7 +29,7 @@ class DataCompare {
      * 快速创建一个对比节点
      * @param data 原始数据
      * @param parent 父节点
-     * @returns 
+     * @returns
      */
     public speedCreateCompareNode<T extends CompareDataAttr = CompareData> (data: T, parent?: CompareTree<T>): CompareTree<T> {
         return this.createCompareNode({ compareData: data, target: data }, parent)
@@ -41,7 +40,7 @@ class DataCompare {
      * @param data 原始数据
      * @param parent 父节点
      * @param isClone 是否为clone节点
-     * @returns 
+     * @returns
      */
     public createCompareNode<T extends CompareDataAttr = CompareData> (data: CreateCompareTreeProps<T>, parent?: CompareTree<T>, isClone = false): CompareTree<T> {
         const target = data.target ?? data.compareData as Required<T> ?? undefined
@@ -84,8 +83,8 @@ class DataCompare {
      * @param parent 父节点数据
      * @returns 对比后的数据_
      */
-    public diffCompareTree(origin: CompareTree[], target: CompareTree[], parent?: CompareTree): CompareTree[]
-    public diffCompareTree(origin: CompareTree, target: CompareTree, parent?: CompareTree): CompareTree[]
+    public diffCompareTree (origin: CompareTree[], target: CompareTree[], parent?: CompareTree): CompareTree[]
+    public diffCompareTree (origin: CompareTree, target: CompareTree, parent?: CompareTree): CompareTree[]
     public diffCompareTree (origin: any, target: any, parent?: CompareTree): CompareTree[] {
         if (isArray(origin) && isArray(target)) {
             return diffCompareTreeUtil(origin, target, parent)
@@ -96,13 +95,13 @@ class DataCompare {
 
     /**
      * diffStatus
-     * @param current 
-     * @param online 
-     * @param currentParent 
-     * @param onlineParent 
+     * @param current
+     * @param online
+     * @param currentParent
+     * @param onlineParent
      */
-    public diffStatus(current: CompareTree[], online: CompareTree[], currentParent?: CompareTree, onlineParent?: CompareTree): void
-    public diffStatus(current: CompareTree, online: CompareTree, currentParent?: CompareTree, onlineParent?: CompareTree): void
+    public diffStatus (current: CompareTree[], online: CompareTree[], currentParent?: CompareTree, onlineParent?: CompareTree): void
+    public diffStatus (current: CompareTree, online: CompareTree, currentParent?: CompareTree, onlineParent?: CompareTree): void
     public diffStatus (current: any, online: any, currentParent?: CompareTree, onlineParent?: CompareTree): void {
         if (isArray(current) && isArray(online)) {
             diffStatusUtil(current, online, currentParent, onlineParent)
@@ -117,7 +116,7 @@ class DataCompare {
      * @param online 线上版本
      * @param base 基础版本
      */
-    public speedDiffStatus <T extends CompareDataAttr = CompareData> (current: T, online: T, base: T): SpeedDiffStatusType {
+    public speedDiffStatus<T extends CompareDataAttr = CompareData> (current: T, online: T, base: T): SpeedDiffStatusType {
         const currentTree = this.speedCreateCompareNode(current)
         const onlineTree = this.speedCreateCompareNode(online)
         const baseTree = this.speedCreateCompareNode(base)
@@ -133,8 +132,8 @@ class DataCompare {
     /**
      * 解析
      */
-    public parse<T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T>): CompareTree<T>
-    public parse<T extends CompareDataAttr = CompareData>(data: T[], parent?: CompareTree<T>): CompareTree<T>[]
+    public parse<T extends CompareDataAttr = CompareData> (data: T, parent?: CompareTree<T>): CompareTree<T>
+    public parse<T extends CompareDataAttr = CompareData> (data: T[], parent?: CompareTree<T>): CompareTree<T>[]
     public parse<T extends CompareDataAttr = CompareData> (data: T[] | T, parent?: CompareTree<T>): CompareTree<T>[] | CompareTree<T> {
         this.cycle.addCycle('beforeParse', data, parent)
         let newNode: CompareTree<T> | CompareTree<T>[]
@@ -148,5 +147,6 @@ class DataCompare {
         return newNode
     }
 }
+
 const dataCompare = DataCompare.instance
 export default dataCompare

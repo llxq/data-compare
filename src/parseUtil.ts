@@ -1,12 +1,11 @@
 import { speedCreateCompareNode } from '../main'
-import { CompareDataAttr, CompareData, CompareTree } from './types'
 import { isArray } from './utils'
 import { getConfig } from './utils/config'
 import { each } from './utils/object'
 
 const getEmptyData = <T extends CompareDataAttr = CompareData> () => speedCreateCompareNode({ id: new Date().valueOf() } as T)
 
-const parseItem = <T extends CompareDataAttr = CompareData >(data: T, parent?: CompareTree<T>): CompareTree<T> => {
+const parseItem = <T extends CompareDataAttr = CompareData> (data: T, parent?: CompareTree<T>): CompareTree<T> => {
     if (!data) return getEmptyData<T>()
     const { childrenKey } = getConfig()
     const keys = Object.keys(data)
@@ -19,7 +18,7 @@ const parseItem = <T extends CompareDataAttr = CompareData >(data: T, parent?: C
     return speedCreateCompareNode<T>(newData as T, parent)
 }
 
-const parseChildren = <T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T>): CompareTree<T> => {
+const parseChildren = <T extends CompareDataAttr = CompareData> (data: T, parent?: CompareTree<T>): CompareTree<T> => {
     const { childrenKey } = getConfig()
     const currentNode = parseItem(data, parent)
     if (Reflect.has(data, childrenKey)) {
