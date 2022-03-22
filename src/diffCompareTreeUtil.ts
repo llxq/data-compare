@@ -3,6 +3,7 @@ import { each } from './utils/object'
 import { cloneDeep } from './lodash'
 import { createCompareNode, cycle, diffAttr } from '../main'
 import { getSomeValue } from './utils/config'
+import { CompareStatusEnum } from './type'
 
 
 const setChangeStatus = (source: CompareTree, changeInfo: ChangeCompareInfo): void => {

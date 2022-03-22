@@ -5,6 +5,8 @@ import ts from 'rollup-plugin-typescript2'
 import commonjs from '@rollup/plugin-commonjs'
 import resolvePlugin from '@rollup/plugin-node-resolve'
 
+// import './scripts/publish'
+
 export default defineConfig({
     input: 'main.ts',
     output: [

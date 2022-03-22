@@ -1,3 +1,4 @@
+import { CompareStatusEnum } from '../type'
 import { each } from './object'
 
 export class Cycle {

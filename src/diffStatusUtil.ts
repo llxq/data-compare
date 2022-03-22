@@ -1,6 +1,7 @@
 import { createCompareNode } from '../main'
 import { createIdxCache } from './diffCompareTreeUtil'
 import { cloneDeep, isEqual } from './lodash'
+import { CompareStatusEnum } from './type'
 import { isUndefined } from './utils'
 import { getConfig, getSomeValue } from './utils/config'
 import cycle from './utils/Cycle'

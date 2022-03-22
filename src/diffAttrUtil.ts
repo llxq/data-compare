@@ -1,3 +1,4 @@
+import { CompareStatusEnum } from './type'
 import { isArray, isUndefined } from './utils'
 import { each } from './utils/object'
 

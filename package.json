@@ -1,6 +1,6 @@
 {
   "name": "@chendf/data-compare",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "data-compare是一个对比数据之间差异的一个轻量级库，类似于简化版本的git对比。也可以单纯用来对比两个数据之间的差异。",
   "main": "main.ts",
   "module": "main.ts",
@@ -9,11 +9,10 @@
     "module": "index.mjs"
   },
   "files": [
-    "dist/",
-    "index.d.ts"
+    "dist/"
   ],
   "scripts": {
-    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "build": "node scripts/build.js",
     "prepare": "husky install"
   },
   "repository": {
@@ -34,12 +33,14 @@
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
+    "commander": "^9.1.0",
     "eslint": "^8.10.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.4",
     "rollup": "^2.68.0",
     "rollup-plugin-typescript2": "^0.31.2",
     "shelljs": "^0.8.5",
+    "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   },
   "lint-staged": {
