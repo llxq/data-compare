@@ -1,6 +1,6 @@
 {
   "name": "@chendf/data-compare",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "data-compare是一个对比数据之间差异的一个轻量级库，类似于简化版本的git对比。也可以单纯用来对比两个数据之间的差异。",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
