@@ -30,10 +30,13 @@ if (writeVersion) {
 
 console.log('The current package version is', newVersion)
 
-shell.sed('-i', `"version": "${ preVersion }"`, `"version": "${ newVersion }"`, resolvePackageJson)
+shell.sed('-i', `"version": "${preVersion}"`, `"version": "${newVersion}"`, resolvePackageJson)
 
 // default async is fase
 shell.exec('pnpm i')
+
+// delete dist
+shell.rm('-rf', './dist')
 
 // build
 shell.exec('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
