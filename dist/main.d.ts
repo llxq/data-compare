@@ -1,4 +1,25 @@
-declare class Cycle {
+import dataCompare from './src';
+export declare const createCompareNode: <T extends CompareDataAttr = CompareData>(data: CreateCompareTreeProps<T>, parent?: CompareTree<T> | undefined, isClone?: boolean) => CompareTree<T>;
+export declare const speedCreateCompareNode: <T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T> | undefined) => CompareTree<T>;
+export declare const diffCompareTree: {
+    (origin: CompareTree<CompareData>[], target: CompareTree<CompareData>[], parent?: CompareTree<CompareData> | undefined): CompareTree<CompareData>[];
+    (origin: CompareTree<CompareData>, target: CompareTree<CompareData>, parent?: CompareTree<CompareData> | undefined): CompareTree<CompareData>[];
+};
+export declare const diffStatus: {
+    (current: CompareTree<CompareData>[], online: CompareTree<CompareData>[], currentParent?: CompareTree<CompareData> | undefined, onlineParent?: CompareTree<CompareData> | undefined): void;
+    (current: CompareTree<CompareData>, online: CompareTree<CompareData>, currentParent?: CompareTree<CompareData> | undefined, onlineParent?: CompareTree<CompareData> | undefined): void;
+};
+export declare const speedDiffStatus: <T extends CompareDataAttr = CompareData>(current: T, online: T, base: T) => SpeedDiffStatusType;
+export declare const diffAttr: (origin: unknown, target: unknown, pathStacks?: string[]) => AttrCompareStatus<CompareDataAttr>;
+export declare const parse: {
+    <T extends CompareDataAttr = CompareData>(data: T, parent?: CompareTree<T> | undefined): CompareTree<T>;
+    <T_1 extends CompareDataAttr = CompareData>(data: T_1[], parent?: CompareTree<T_1> | undefined): CompareTree<T_1>[];
+};
+export declare const cycle: import("./src/utils/Cycle").Cycle;
+export declare const updateConfig: (config: Partial<DataCompareConfig>) => void;
+export default dataCompare;
+ 
+ declare class Cycle {
     public beforeCreateCompareNode<T extends CompareDataAttr = CompareData> (callback: ArgsCallback<T>): void
 
     public beforeCompare<T extends CompareDataAttr = CompareData> (callback: Args3Callback<T>): void

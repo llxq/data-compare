@@ -41,8 +41,10 @@ shell.rm('-rf', './dist')
 // build
 shell.exec('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
 
+shell.rm('-rf', './dist/rollup.config.d.ts')
+shell.rm('-rf', './dist/index.d.ts')
+
 // generate .d.ts and update export
-const typesPath = './dist/index.d.ts'
-shell.cp('-r', './index.d.ts', typesPath)
-const typesStr = readFileSync(typesPath, 'utf-8')
-writeFileSync(typesPath, typesStr.replace(/declare/g, 'export declare'), { encoding: 'utf-8' })
+const typesStr = readFileSync('./index.d.ts', 'utf-8')
+const mainTypeStr = readFileSync('./dist/main.d.ts', 'utf-8')
+writeFileSync('./dist/main.d.ts', `${ mainTypeStr } \n ${ typesStr }`, { encoding: 'utf-8' })

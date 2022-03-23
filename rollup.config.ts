@@ -12,12 +12,12 @@ export default defineConfig({
     output: [
         {
             name: packageJson.name,
-            file: join('dist', packageJson.publishConfig.main),
+            file: join('dist', 'index.js'),
             format: 'umd'
         },
         {
             name: packageJson.name,
-            file: join('dist', packageJson.publishConfig.module),
+            file: join('dist', 'index.mjs'),
             format: 'esm'
         }
     ],
