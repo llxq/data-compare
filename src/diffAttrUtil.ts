@@ -66,7 +66,7 @@ const sameValue = <T extends Record<string, unknown>> (originKey: string, target
                 if (!Reflect.has(status, 'attrStatus')) {
                     Reflect.set(status, 'attrStatus', {})
                 }
-                Object.assign(status.attrStatus, attrStatus)
+                Object.assign(status.attrStatus!, attrStatus)
                 if (isArray(originValue) && isArray(targetValue)) {
                     status.type = type
                 }
@@ -193,7 +193,7 @@ const diffObjAttr = (origin: Record<string, unknown>, target: Record<string, unk
 
     // target 遍历完成了。剩下的都是新增的
     if (startOriginKeyIdx <= endOriginKeyIdx) {
-        for (; startOriginKeyIdx <= endOriginKeyIdx; ++startOriginKeyIdx) updateStatus(originKeys[startOriginKeyIdx], {
+        for (; startOriginKeyIdx <= endOriginKeyIdx; ++startOriginKeyIdx) !filterIdx.has(originKeys[startOriginKeyIdx]) && updateStatus(originKeys[startOriginKeyIdx], {
             type: CompareStatusEnum.Create,
             path: getPath(originKeys[startOriginKeyIdx])
         }, status)
@@ -201,7 +201,7 @@ const diffObjAttr = (origin: Record<string, unknown>, target: Record<string, unk
 
     // origin 遍历完成了。剩下的都是删除的
     if (startTargetKeyIdx <= endTargetKeyIdx) {
-        for (; startTargetKeyIdx <= endTargetKeyIdx; ++startTargetKeyIdx) updateStatus(targetKeys[startTargetKeyIdx], {
+        for (; startTargetKeyIdx <= endTargetKeyIdx; ++startTargetKeyIdx) !filterIdx.has(targetKeys[startTargetKeyIdx]) && updateStatus(targetKeys[startTargetKeyIdx], {
             type: CompareStatusEnum.Delete,
             path: getPath(targetKeys[startTargetKeyIdx])
         }, status)
