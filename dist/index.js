@@ -230,7 +230,7 @@
         // target 遍历完成了。剩下的都是新增的
         if (startOriginKeyIdx <= endOriginKeyIdx) {
             for (; startOriginKeyIdx <= endOriginKeyIdx; ++startOriginKeyIdx)
-                updateStatus$2(originKeys[startOriginKeyIdx], {
+                !filterIdx.has(originKeys[startOriginKeyIdx]) && updateStatus$2(originKeys[startOriginKeyIdx], {
                     type: CompareStatusEnum.Create,
                     path: getPath(originKeys[startOriginKeyIdx])
                 }, status);
@@ -238,7 +238,7 @@
         // origin 遍历完成了。剩下的都是删除的
         if (startTargetKeyIdx <= endTargetKeyIdx) {
             for (; startTargetKeyIdx <= endTargetKeyIdx; ++startTargetKeyIdx)
-                updateStatus$2(targetKeys[startTargetKeyIdx], {
+                !filterIdx.has(targetKeys[startTargetKeyIdx]) && updateStatus$2(targetKeys[startTargetKeyIdx], {
                     type: CompareStatusEnum.Delete,
                     path: getPath(targetKeys[startTargetKeyIdx])
                 }, status);
