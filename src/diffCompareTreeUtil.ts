@@ -1,12 +1,13 @@
-import { isUndefined } from './utils'
-import { each } from './utils/object'
-import { cloneDeep } from './lodash'
 import { createCompareNode, cycle, diffAttr } from '../main'
-import { getSomeValue } from './utils/config'
+import { cloneDeep } from './lodash'
 import { CompareStatusEnum } from './type'
+import { isUndefined } from './utils'
+import { getSomeValue } from './utils/config'
+import { each } from './utils/object'
 
 
 const setChangeStatus = (source: CompareTree, changeInfo: ChangeCompareInfo): void => {
+    if (!source.diffChange) return
     source.changeInfo = changeInfo
 
     // 如果状态为 None，则修改为 Change
@@ -61,7 +62,8 @@ const createDeleteNode = <T extends CompareDataAttr = CompareData> (compareTree:
         },
         children: diffDeleteChildren(compareTree),
         // XXX 后续优化
-        target: cloneDeep(compareTree.target)
+        target: cloneDeep(compareTree.target),
+        diffChange: compareTree.diffChange
     }, parent, true)
 }
 

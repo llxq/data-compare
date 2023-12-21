@@ -60,7 +60,8 @@ class DataCompare {
             childrenChangeInfo: data.childrenChangeInfo ?? undefined,
             children: (data.children ?? []) as CompareTree<T>[],
             parent: parent ?? data.parent as UndefinedAble<CompareTree<T>>,
-            mappingId: data.mappingId
+            mappingId: data.mappingId,
+            diffChange: data.diffChange ?? true
         }
         !isClone && this.cycle.addCycle('beforeCreateCompareNode', newNode)
         return newNode
@@ -75,6 +76,32 @@ class DataCompare {
      */
     public diffAttr (origin: unknown, target: unknown, pathStacks: string[] = []): AttrCompareStatus {
         return diffAttrUtil(origin, target, pathStacks)
+    }
+
+    /**
+     * 浅比较两个数据之前的差异和状态（只有一层）
+     * @param origin 新的数据
+     * @param target 原始数据
+     * @param pathStacks 属性的路径
+     * @returns 返回对比状态 
+     */
+    public shallowDiffAttr (origin: unknown, target: unknown, pathStacks: string[] = []): UndefinedAble<ShallowAttrCompareStatus> {
+        const result = diffAttrUtil(origin, target, pathStacks) ?? {}
+        const attrStatus = result.attrStatus
+        if (result.type === CompareStatusEnum.None || !attrStatus) {
+            return void 0
+        }
+        return Object.keys(attrStatus).reduce((value: ShallowAttrCompareStatus, key: string) => {
+            const status: AttrCompareStatus = Reflect.get(attrStatus ?? {}, key)
+            const path = status.path ?? ''
+            const oldValue = status.type === CompareStatusEnum.Delete ? Reflect.get(target as Obj, path) : status.oldValue
+            Reflect.set(value, key, {
+                type: status.type,
+                newValue: Reflect.get(origin as Obj, path),
+                oldValue
+            } as ShallowAttrCompareStatus)
+            return value
+        }, {} as ShallowAttrCompareStatus)
     }
 
     /**

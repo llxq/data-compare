@@ -10,12 +10,12 @@ export default defineConfig({
     output: [
         {
             name: packageJson.name,
-            file: join('dist', 'index.js'),
+            file: join('dist', 'index.umd.js'),
             format: 'umd'
         },
         {
             name: packageJson.name,
-            file: join('dist', 'index.mjs'),
+            file: join('dist', 'index.js'),
             format: 'esm'
         }
     ],

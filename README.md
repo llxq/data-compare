@@ -48,6 +48,8 @@ export interface CompareTree<T extends CompareDataAttr = CompareData> extends Ob
     parent?: CompareTree<T>
     // 当前节点id与另一个对比数id的映射
     mappingId?: number
+    // 是否对比更换位置状态
+    diffChange?: boolean
 }
 ```
 
@@ -297,6 +299,36 @@ const diffResult = diffAttr({ a: 2, b: 2, d: 1 }, { a: 1, b: 2, c: 3 })
             type: "delete",
             path: "c"
         }
+    }
+}
+```
+
+
+__shallowDiffAttr: 对比两个对象之间的差异，返回对象的第一层结果差异，如果无差异则返回 `undefined`，并且有存储对应的路径与旧值__
+- _shallowDiffAttr (origin: unknown, target: unknown, pathStacks: string[] = []): UndefinedAble<ShallowAttrCompareStatus>_
+- _@param_ origin 当前版本数据。
+- _@param_ target 其他版本数据。
+- _@param_ pathStacks 可选参数，为当前对比的节点的key路径。
+```ts
+import { shallowDiffAttr } from '@chendf/data-compare'
+const diffResult = shallowDiffAttr({ a: 2, b: 2, d: 1 }, { a: 1, b: 2, c: 3 })
+
+// 返回结果
+{
+    "a": {
+        "type": "update",
+        "newValue": 2,
+        "oldValue": 1
+    },
+    "d": {
+        "type": "create",
+        "newValue": 1,
+        "oldValue": undefined
+    },
+    "c": {
+        "type": "delete",
+        "newValue": undefined,
+        "oldValue": 3
     }
 }
 ```

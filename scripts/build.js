@@ -18,19 +18,21 @@ let newVersion = defaultVersion
 
 // add params
 program.option('-v, --versions <type>', 'you publish version', defaultVersion)
+program.option('-isDev, --isDev <type>', 'you publish dev version', false)
 // parse
 program.parse()
 
 // 发布执行 npm。使用pnpm传递参数暂时不能传递
-const writeVersion = program.opts().versions
-
-if (writeVersion) {
-    newVersion = writeVersion
+const { versions, isDev } = program.opts()
+if (isDev === true) {
+    if (versions) {
+        newVersion = versions
+    }
+    
+    console.log('The current package version is', newVersion)
+    
+    shell.sed('-i', `"version": "${preVersion}"`, `"version": "${newVersion}"`, resolvePackageJson)
 }
-
-console.log('The current package version is', newVersion)
-
-shell.sed('-i', `"version": "${preVersion}"`, `"version": "${newVersion}"`, resolvePackageJson)
 
 // default async is fase
 shell.exec('pnpm i')
@@ -45,6 +47,6 @@ shell.rm('-rf', './dist/rollup.config.d.ts')
 shell.rm('-rf', './dist/index.d.ts')
 
 // generate .d.ts and update export
-const typesStr = readFileSync('./index.d.ts', 'utf-8')
+const typesStr = readFileSync('./typings/index.d.ts', 'utf-8')
 const mainTypeStr = readFileSync('./dist/main.d.ts', 'utf-8')
-writeFileSync('./dist/main.d.ts', `${ mainTypeStr } \n ${ typesStr }`, { encoding: 'utf-8' })
+writeFileSync('./dist/index.d.ts', `${ mainTypeStr } \n ${ typesStr }`, { encoding: 'utf-8' })

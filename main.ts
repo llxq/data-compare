@@ -8,6 +8,7 @@ export const diffCompareTree = dataCompare.diffCompareTree.bind(dataCompare)
 export const diffStatus = dataCompare.diffStatus.bind(dataCompare)
 export const speedDiffStatus = dataCompare.speedDiffStatus.bind(dataCompare)
 export const diffAttr = dataCompare.diffAttr.bind(dataCompare)
+export const shallowDiffAttr = dataCompare.shallowDiffAttr.bind(dataCompare)
 export const parse = dataCompare.parse.bind(dataCompare)
 
 // cycle

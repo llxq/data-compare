@@ -136,7 +136,8 @@ const cloneCompareTree = (cloneTree: CompareTree, statusType: CompareStatusEnum,
         parent,
         // XXX 后续优化
         target: cloneDeep(cloneTree.target),
-        mappingId: cloneTree.id
+        mappingId: cloneTree.id,
+        diffChange: cloneTree.diffChange
     })
 
     newTreeNode.children = cloneTree.children.map(it => cloneCompareTree(it, statusType, newTreeNode, isOnline))
@@ -288,6 +289,8 @@ export const diffStatusUtil = (current: CompareTree[], online: CompareTree[], cu
                     // 代表着插入到中间。只需要结束节点后移即可
                     endOnline = online[++endOnlineIdx]
                 }
+                // 需要更新缓存
+                cacheIdMap = createIdxCache(startOnlineIdx, endOnlineIdx, online)
             }
         }
     }
