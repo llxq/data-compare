@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import Test from './components/test.vue'
 import { useSpeedCreateCompareNode } from './hooks/useSpeedCreateCompareNode'
 const { compareTree1, compareTree2, compareResult } = useSpeedCreateCompareNode()
 
@@ -11,7 +10,6 @@ const { compareTree1, compareTree2, compareResult } = useSpeedCreateCompareNode(
         {{ compareTree2 }}
         {{ compareResult }}
     </div>
-    <Test class="123"></Test>
 </template>
 
 <style scoped>

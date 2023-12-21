@@ -20,7 +20,10 @@ const updateStatusTypeByAttr = (status: AttrCompareStatus): AttrCompareStatus =>
     if (status.attrStatus) {
         // 如果全子节点状态一致，则是同种状态，如果状态不一致，那就是 update
         const keys = Object.keys(status.attrStatus)
-        if (!keys.some(it => status.attrStatus![it] === status.attrStatus![0])) {
+        const firstType = status.attrStatus![keys[0]].type
+        if (!keys.some(it => status.attrStatus![it].type === firstType)) {
+            type = firstType
+        } else {
             type = CompareStatusEnum.Update
         }
     }
