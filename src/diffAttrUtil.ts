@@ -1,5 +1,6 @@
 import { CompareStatusEnum } from './type'
 import { isArray, isUndefined } from './utils'
+import { runGlobalCycle } from './utils/Cycle'
 import { each } from './utils/object'
 
 
@@ -56,7 +57,9 @@ const createIdxCache = (start: number, end: number, source: string[]): Map<strin
 const sameValue = <T extends Record<string, unknown>> (originKey: string, targetKey: string, origin: T, target: T, pathStacks: string[] = []): UndefinedAble<AttrCompareStatus> => {
     const originValue = Reflect.get(origin, originKey)
     const targetValue = Reflect.get(target, targetKey)
-    if (originValue !== targetValue) {
+    const cycleValue = runGlobalCycle('beforeSameValue', { key: originKey, value: originValue }, { key: targetKey, value: targetValue }, origin, target)
+    const isSame = typeof cycleValue === 'undefined' ? originValue === targetValue : cycleValue
+    if (!isSame) {
         const status: AttrCompareStatus = {
             type: CompareStatusEnum.None,
             path: pathStacks.join('.'),

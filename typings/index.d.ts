@@ -68,6 +68,11 @@ declare type DifferenceTipsStatus = 'none' | 'compare' | 'cover' | 'merge'
 
 declare type DialogType = 'tips' | 'compare' | 'none'
 
+declare type ISameValue = {
+    key: string
+    value: any
+}
+
 // 必须要的属性
 declare type CompareDataAttr = { id?: number, name?: string }
 
@@ -112,6 +117,8 @@ declare type CycleType =
     | 'beforeCloneCompareTree'
     | 'beforeParse'
     | 'afterParse'
+
+declare type IGlobalCycle = 'beforeSameValue'
 
 declare type CycleCallback = (...args: any) => any
 

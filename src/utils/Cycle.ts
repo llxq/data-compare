@@ -154,3 +154,24 @@ export class Cycle {
 }
 
 export default new Cycle()
+
+const GlobalCycle: Record<IGlobalCycle, () => any> = {} as Record<IGlobalCycle, () => any>
+
+export const runGlobalCycle = (cycleType: IGlobalCycle, ...args: any): any => {
+    const cycle = Reflect.get(GlobalCycle, cycleType)
+    if (cycle) {
+        return cycle(...args)
+    }
+}
+
+/**
+ * 在对比value之前判断
+ * @param callback 对比结果，返回是否不相等
+ */
+export const useBeforeSameValue = (callback: (originSameValue: ISameValue, newSameValue: ISameValue, originValue: any, newValue: any) => UndefinedAble<boolean>): void => {
+    if (Reflect.has(GlobalCycle, 'beforeSameValue')) {
+        console.info('beforeSameValue has been registered')
+        return
+    }
+    Reflect.set(GlobalCycle, 'beforeSameValue', callback)
+}

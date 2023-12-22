@@ -424,3 +424,13 @@ __afterParse: 解析节点之后调用__
     - _@param data 原始数据_
     - _@param newNode 生成的节点数据_
     - _@param parent 父
+
+### 全局钩子函数
+注意：`全局钩子函数有且只能有一个`
+- `useBeforeSameValue`: 在对比两个值是否相等之前掉用，可以修改两个值是否相等。返回 `true` 代表两个值 `相等`，返回 `false` 代表两个值 `不相等`。
+    - _callback(callback: (originSameValue: ISameValue, newSameValue: ISameValue, originValue: any, newValue: any)_
+        - `ISameValue`: { key: string /** 当前对比的 key */ , value: any /** 当前对比的 value */ }
+        - _@param originSameValue 旧数据_
+        - _@param newSameValue 新数据_
+        - _@param originValue 旧原始数据 （即 diff 的 origin）_
+        - _@param newValue 新原始数据 （即 diff 的 target）_

@@ -1,5 +1,6 @@
 import { toRefs } from 'vue'
 import { diffAttr, diffCompareTree, diffStatus, shallowDiffAttr, speedCreateCompareNode } from '../../../main'
+import { useBeforeSameValue } from '../../../src/utils/Cycle'
 
 export const useSpeedCreateCompareNode = () => {
     const data = {
@@ -24,7 +25,16 @@ export const useSpeedCreateCompareNode = () => {
             x: 3
         }
     }
-    console.log('shallowDiffAttr', shallowDiffAttr({ a: 2, b: 2, d: 1 }, { a: 1, b: 2, c: 3 }))
+
+    useBeforeSameValue((originSameValue, newSameValue) => {
+        if (originSameValue.key === 'x' && newSameValue.key === 'x') {
+            const values = ['开启', '打开']
+            /* 两个都包含则表示相等 */
+            return values.includes(newSameValue.value) && values.includes(originSameValue.value)
+        }
+    })
+
+    console.log('shallowDiffAttr', shallowDiffAttr({ a: 2, b: 2, d: 1, x: '开启' }, { a: 1, b: 2, c: 3, x: '打开' }))
 
     const result = diffAttr(data, data2)
     const columns = [

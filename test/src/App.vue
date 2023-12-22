@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { useSpeedCreateCompareNode } from './hooks/useSpeedCreateCompareNode'
-const { compareTree1, compareTree2, compareResult } = useSpeedCreateCompareNode()
+const a = useSpeedCreateCompareNode()
 
 </script>
 
 <template>
-    <div>
-        {{ compareTree1 }}
-        {{ compareTree2 }}
-        {{ compareResult }}
-    </div>
+    <div></div>
 </template>
 
 <style scoped>
